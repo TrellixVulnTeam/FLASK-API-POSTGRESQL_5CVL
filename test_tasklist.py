@@ -19,53 +19,53 @@ class TasklistTestCase(unittest.TestCase):
 
     def test_tasklist_creation(self):
         """Test API can create a tasklist (POST request)"""
-        res = self.client().post('/tasklists/', data=self.tasklist)
+        res = self.client().post('/api/tasklists', data=self.tasklist)
         self.assertEqual(res.status_code, 201)
         self.assertIn('Go to Borabora', str(res.data))
 
     def test_api_can_get_all_tasklists(self):
         """Test API can get a tasklist (GET request)."""
-        res = self.client().post('/tasklists/', data=self.tasklist)
+        res = self.client().post('/api/tasklists', data=self.tasklist)
         self.assertEqual(res.status_code, 201)
-        res = self.client().get('/tasklists/')
+        res = self.client().get('/api/tasklists')
         self.assertEqual(res.status_code, 200)
         self.assertIn('Go to Borabora', str(res.data))
 
     def test_api_can_get_tasklist_by_id(self):
         """Test API can get a single tasklist by using it's id."""
-        rv = self.client().post('/tasklists/', data=self.tasklist)
+        rv = self.client().post('/api/tasklists', data=self.tasklist)
         self.assertEqual(rv.status_code, 201)
         result_in_json = json.loads(rv.data.decode('utf-8').replace("'", "\""))
         result = self.client().get(
-            '/tasklists/{}'.format(result_in_json['id']))
+            '/api/tasklists/{}'.format(result_in_json['id']))
         self.assertEqual(result.status_code, 200)
         self.assertIn('Go to Borabora', str(result.data))
 
     def test_tasklist_can_be_edited(self):
         """Test API can edit an existing tasklist. (PUT request)"""
         rv = self.client().post(
-            '/tasklists/',
+            '/api/tasklists',
             data={'name': 'Eat, pray and love'})
         self.assertEqual(rv.status_code, 201)
         rv = self.client().put(
-            '/tasklists/1',
+            '/api/tasklists/1',
             data={
                 "name": "Dont just eat, but also pray and love :-)"
             })
         self.assertEqual(rv.status_code, 200)
-        results = self.client().get('/tasklists/1')
+        results = self.client().get('/api/tasklists/1')
         self.assertIn('Dont just eat', str(results.data))
 
     def test_tasklist_deletion(self):
         """Test API can delete an existing tasklist. (DEL request)."""
         rv = self.client().post(
-            '/tasklists/',
+            '/api/tasklists',
             data={'name': 'Eat, pray and love'})
         self.assertEqual(rv.status_code, 201)
-        res = self.client().delete('/tasklists/1')
+        res = self.client().delete('/api/tasklists/1')
         self.assertEqual(res.status_code, 200)
         # Test to see if it exists, should return a 404
-        result = self.client().get('/tasklists/1')
+        result = self.client().get('/api/tasklists/1')
         self.assertEqual(result.status_code, 404)
 
     def tearDown(self):

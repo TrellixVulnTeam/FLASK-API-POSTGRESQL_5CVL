@@ -16,7 +16,7 @@ def create_app(config_name):
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
 
-    @app.route('/tasklists/', methods=['POST', 'GET'])
+    @app.route('/api/tasklists', methods=['POST', 'GET'])
     def tasklists():
         if request.method == "POST":
             name = str(request.data.get('name', ''))
@@ -51,7 +51,7 @@ def create_app(config_name):
             response.status_code = 200
             return response
 
-    @app.route('/tasklists/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+    @app.route('/api/tasklists/<int:id>', methods=['GET', 'PUT', 'DELETE'])
     def tasklist_manipulation(id, **kwargs):
      # retrieve a tasklist using it's ID
         tasklist = Tasklist.query.filter_by(id=id).first()
